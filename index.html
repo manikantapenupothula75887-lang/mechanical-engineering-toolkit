@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mechanical Engineer Toolkit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+ 
+<!-- LOADER -->
+<div id="loader">
+  <div class="spinner"></div>
+  <h2>Loading Engineering Toolkit...</h2>
+</div>
+ 
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+ 
+<!-- TOP NAVBAR -->
+<div class="top-navbar">
+  <!-- Hamburger: always visible, never stretches -->
+  <button class="menu-btn" onclick="toggleSidebar()" aria-label="Open menu">&#9776;</button>
+ 
+  <div class="logo">⚙ Mechanical Toolkit</div>
+ 
+  <!-- Search: visible on desktop, hidden on mobile via CSS -->
+  <input type="text" id="globalSearch" placeholder="Search calculators, formulas..." onkeyup="globalSearch()">
+ 
+  <!-- Desktop nav links -->
+  <div class="nav-actions">
+    <button class="nav-btn" onclick="scrollToSection('calculators')">Calculators</button>
+    <button class="nav-btn" onclick="scrollToSection('materials')">Materials</button>
+  </div>
+ 
+  <!-- Theme toggle: always visible -->
+  <button class="nav-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌗 Theme</button>
+</div>
+ 
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <h2>⚙ Toolkit</h2>
+  <input type="text" id="searchInput" placeholder="Search calculator..." onkeyup="searchCalculators()">
+  <a href="#" onclick="showSection('dashboard');closeSidebar()" class="active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="#" onclick="showSection('calculators');closeSidebar()"><i class="fa-solid fa-calculator"></i><span>Calculators</span></a>
+  <a href="#" onclick="showSection('stressStrain');closeSidebar()"><i class="fa-solid fa-chart-line"></i><span>Stress-Strain</span></a>
+  <a href="#" onclick="showSection('charts');closeSidebar()"><i class="fa-solid fa-chart-column"></i><span>Charts</span></a>
+  <a href="#" onclick="showSection('history');closeSidebar()"><i class="fa-solid fa-clock-rotate-left"></i><span>History</span></a>
+  <a href="#" onclick="showSection('formulaLibrary');closeSidebar()"><i class="fa-solid fa-book"></i><span>Formulas</span></a>
+  <a href="#" onclick="showSection('materials');closeSidebar()"><i class="fa-solid fa-table"></i><span>Materials</span></a>
+  <a href="#" onclick="showSection('converter');closeSidebar()"><i class="fa-solid fa-right-left"></i><span>Unit Converter</span></a>
+  <a href="#" onclick="showSection('domains');closeSidebar()"><i class="fa-solid fa-gears"></i><span>Domains</span></a>
+  <a href="#" onclick="showSection('contact');closeSidebar()"><i class="fa-solid fa-envelope"></i><span>Contact</span></a>
+  <button class="dark-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i> Dark Mode</button>
+</div>
+ 
+<!-- MAIN CONTENT -->
+<div class="main-content">
+ 
+  <!-- DASHBOARD -->
+  <section id="dashboard">
+    <h1>Engineering Dashboard</h1>
+    <div class="dashboard-grid">
+      <div class="dash-card" onclick="showSection('calculators')"><h2>🧮 Calculators</h2><p>Stress, Torque, RPM, Power tools</p></div>
+      <div class="dash-card" onclick="showSection('materials')"><h2>📊 Materials</h2><p>Engineering property database</p></div>
+      <div class="dash-card" onclick="showSection('formulaLibrary')"><h2>📚 Formulas</h2><p>Mechanical engineering formulas</p></div>
+      <div class="dash-card" onclick="showSection('stressStrain')"><h2>📈 Graphs</h2><p>Stress-strain analysis tools</p></div>
+    </div>
+    <div class="card">
+      <h2>Recent Calculations</h2>
+      <div id="historyBox">No calculations yet.</div>
+      <button onclick="clearHistory()">Clear History</button>
+    </div>
+  </section>
+ 
+  <!-- CALCULATORS -->
+  <section id="calculators" class="hidden">
+    <h1>Engineering Calculators</h1>
+    <div class="calculator-grid">
+ 
+      <div class="card">
+        <h2>Stress Calculator</h2>
+        <input type="number" id="stressForce" placeholder="Force (N)" inputmode="decimal">
+        <input type="number" id="stressArea" placeholder="Area (mm²)" inputmode="decimal">
+        <button onclick="calculateStress()">Calculate Stress</button>
+        <p class="result" id="stressResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>Torque Calculator</h2>
+        <input type="number" id="torqueForce" placeholder="Force (N)" inputmode="decimal">
+        <input type="number" id="torqueRadius" placeholder="Radius (m)" inputmode="decimal">
+        <button onclick="calculateTorque()">Calculate Torque</button>
+        <p class="result" id="torqueResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>RPM Calculator</h2>
+        <input type="number" id="cuttingSpeed" placeholder="Cutting Speed (m/min)" inputmode="decimal">
+        <input type="number" id="toolDiameter" placeholder="Diameter (mm)" inputmode="decimal">
+        <button onclick="calculateRPM()">Calculate RPM</button>
+        <p class="result" id="rpmResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>Heat Transfer Calculator</h2>
+        <input type="number" id="heatMass" placeholder="Mass (kg)" inputmode="decimal">
+        <input type="number" id="specificHeat" placeholder="Specific Heat (J/kg·K)" inputmode="decimal">
+        <input type="number" id="tempChange" placeholder="Temperature Change (K)" inputmode="decimal">
+        <button onclick="calculateHeat()">Calculate</button>
+        <p class="result" id="heatResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>Pressure Calculator</h2>
+        <input type="number" id="pressureForce" placeholder="Force (N)" inputmode="decimal">
+        <input type="number" id="pressureArea" placeholder="Area (m²)" inputmode="decimal">
+        <button onclick="calculatePressure()">Calculate Pressure</button>
+        <p class="result" id="pressureResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>Velocity Calculator</h2>
+        <input type="number" id="velDistance" placeholder="Distance (m)" inputmode="decimal">
+        <input type="number" id="velTime" placeholder="Time (s)" inputmode="decimal">
+        <button onclick="calculateVelocity()">Calculate Velocity</button>
+        <p class="result" id="velocityResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>Power Calculator</h2>
+        <input type="number" id="powerTorque" placeholder="Torque (Nm)" inputmode="decimal">
+        <input type="number" id="powerOmega" placeholder="Angular Velocity (rad/s)" inputmode="decimal">
+        <button onclick="calculatePower()">Calculate Power</button>
+        <p class="result" id="powerResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>Density Calculator</h2>
+        <input type="number" id="densityMass" placeholder="Mass (kg)" inputmode="decimal">
+        <input type="number" id="densityVolume" placeholder="Volume (m³)" inputmode="decimal">
+        <button onclick="calculateDensity()">Calculate Density</button>
+        <p class="result" id="densityResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>Efficiency Calculator</h2>
+        <input type="number" id="outputPower" placeholder="Output Power (W)" inputmode="decimal">
+        <input type="number" id="inputPower" placeholder="Input Power (W)" inputmode="decimal">
+        <button onclick="calculateEfficiency()">Calculate Efficiency</button>
+        <p class="result" id="efficiencyResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>Spring Force Calculator</h2>
+        <input type="number" id="springK" placeholder="Spring Constant k (N/m)" inputmode="decimal">
+        <input type="number" id="springX" placeholder="Compression x (m)" inputmode="decimal">
+        <button onclick="calculateSpring()">Calculate Spring Force</button>
+        <p class="result" id="springResult"></p>
+      </div>
+ 
+      <div class="card">
+        <h2>Advanced Beam Deflection</h2>
+        <select id="beamType">
+          <option value="cantilever">Cantilever Beam</option>
+          <option value="simply">Simply Supported Beam</option>
+        </select>
+        <input type="number" id="beamLoad" placeholder="Load (N)" inputmode="decimal">
+        <input type="number" id="beamLength" placeholder="Length (m)" inputmode="decimal">
+        <input type="number" id="youngModulus" placeholder="Young's Modulus (Pa)" inputmode="decimal">
+        <input type="number" id="momentInertia" placeholder="Moment of Inertia (m⁴)" inputmode="decimal">
+        <button onclick="calculateBeamDeflection()">Calculate Deflection</button>
+        <p class="result" id="beamResult"></p>
+        <canvas id="beamChart"></canvas>
+      </div>
+ 
+    </div>
+  </section>
+ 
+  <!-- STRESS STRAIN -->
+  <section id="stressStrain" class="hidden">
+    <h1>Advanced Stress-Strain Curve</h1>
+    <div class="card">
+      <div class="graph-controls">
+        <button onclick="generateStressStrainCurve()">Generate Curve</button>
+        <button onclick="downloadStressGraph()">Download Graph</button>
+      </div>
+      <canvas id="stressChart"></canvas>
+      <div class="curve-info">
+        <div class="info-box"><h3>Elastic Region</h3><p>Material returns to original shape.</p></div>
+        <div class="info-box"><h3>Yield Point</h3><p>Permanent deformation begins.</p></div>
+        <div class="info-box"><h3>Ultimate Tensile Strength</h3><p>Maximum stress material can withstand.</p></div>
+        <div class="info-box"><h3>Plastic Region</h3><p>Permanent deformation increases.</p></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:30px">
+      <h2>Custom Stress-Strain Points</h2>
+      <input type="number" id="stressInput" placeholder="Stress (MPa)" inputmode="decimal">
+      <input type="number" id="strainInput" placeholder="Strain" inputmode="decimal">
+      <div class="graph-controls">
+        <button onclick="addStressStrainPoint()">Add Point</button>
+        <button onclick="downloadCustomGraph()">Download Custom Graph</button>
+      </div>
+      <canvas id="stressStrainChart"></canvas>
+    </div>
+  </section>
+ 
+  <!-- CHARTS -->
+  <section id="charts" class="hidden">
+    <h1>Engineering Charts</h1>
+    <div style="margin-bottom:20px">
+      <button onclick="downloadChart()" style="width:auto">Download Chart PNG</button>
+    </div>
+    <div class="card">
+      <canvas id="myChart"></canvas>
+    </div>
+  </section>
+ 
+  <!-- HISTORY -->
+  <section id="history" class="hidden">
+    <h1>Calculation History</h1>
+    <div class="card">
+      <ul id="historyList"></ul>
+      <div class="history-actions">
+        <button onclick="clearHistory()">Clear History</button>
+        <button onclick="exportCSV()">Export CSV</button>
+        <button onclick="exportPDF()">Export PDF</button>
+        <button onclick="downloadReport()">Download PDF Report</button>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- FORMULA LIBRARY -->
+  <section id="formulaLibrary" class="hidden">
+    <h1>Advanced Formula Library</h1>
+    <div class="card" style="margin-bottom:25px">
+      <input type="text" id="formulaSearch" placeholder="Search formulas..." onkeyup="searchFormulas()">
+    </div>
+ 
+    <div class="formula-category">
+      <button class="accordion">Strength of Materials</button>
+      <div class="panel">
+        <div class="formula-box"><p>$$\sigma = \frac{F}{A}$$</p><span>Stress Formula</span></div>
+        <div class="formula-box"><p>$$\epsilon = \frac{\Delta L}{L}$$</p><span>Strain Formula</span></div>
+        <div class="formula-box"><p>$$\tau = \frac{T r}{J}$$</p><span>Shear Stress</span></div>
+      </div>
+    </div>
+ 
+    <div class="formula-category">
+      <button class="accordion">Thermodynamics</button>
+      <div class="panel">
+        <div class="formula-box"><p>$$Q = mc\Delta T$$</p><span>Heat Transfer</span></div>
+        <div class="formula-box"><p>$$PV = nRT$$</p><span>Ideal Gas Equation</span></div>
+        <div class="formula-box"><p>$$\eta = \frac{Output}{Input} \times 100$$</p><span>Efficiency Formula</span></div>
+      </div>
+    </div>
+ 
+    <div class="formula-category">
+      <button class="accordion">Fluid Mechanics</button>
+      <div class="panel">
+        <div class="formula-box"><p>$$Q = AV$$</p><span>Flow Rate</span></div>
+        <div class="formula-box"><p>$$P = \rho gh$$</p><span>Hydrostatic Pressure</span></div>
+        <div class="formula-box"><p>$$Re = \frac{\rho VD}{\mu}$$</p><span>Reynolds Number</span></div>
+      </div>
+    </div>
+ 
+    <div class="formula-category">
+      <button class="accordion">Manufacturing</button>
+      <div class="panel">
+        <div class="formula-box"><p>$$RPM = \frac{1000V}{\pi D}$$</p><span>Cutting Speed Formula</span></div>
+        <div class="formula-box"><p>$$MRR = W \times D \times F$$</p><span>Material Removal Rate</span></div>
+      </div>
+    </div>
+ 
+    <div class="formula-category">
+      <button class="accordion">Machine Design</button>
+      <div class="panel">
+        <div class="formula-box"><p>$$T = F \times r$$</p><span>Torque Formula</span></div>
+        <div class="formula-box"><p>$$P = T\omega$$</p><span>Power Formula</span></div>
+        <div class="formula-box"><p>$$\delta = \frac{WL^3}{3EI}$$</p><span>Cantilever Deflection</span></div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- MATERIALS -->
+  <section id="materials" class="hidden">
+    <h1>Material Property Database</h1>
+    <div class="card">
+      <input type="text" id="materialSearch" placeholder="Search material..." onkeyup="searchMaterial()">
+      <div class="table-wrapper">
+        <table id="materialTable">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Density (kg/m³)</th>
+              <th>Young's Modulus (GPa)</th>
+              <th>Yield Strength (MPa)</th>
+              <th>Poisson Ratio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Steel</td><td>7850</td><td>200</td><td>250</td><td>0.30</td></tr>
+            <tr><td>Aluminum</td><td>2700</td><td>69</td><td>95</td><td>0.33</td></tr>
+            <tr><td>Copper</td><td>8960</td><td>110</td><td>70</td><td>0.34</td></tr>
+            <tr><td>Cast Iron</td><td>7200</td><td>100</td><td>130</td><td>0.25</td></tr>
+            <tr><td>Titanium</td><td>4500</td><td>116</td><td>880</td><td>0.34</td></tr>
+            <tr><td>Brass</td><td>8500</td><td>100</td><td>200</td><td>0.34</td></tr>
+            <tr><td>Bronze</td><td>8800</td><td>96</td><td>120</td><td>0.34</td></tr>
+            <tr><td>Nickel</td><td>8900</td><td>207</td><td>148</td><td>0.31</td></tr>
+            <tr><td>Magnesium</td><td>1740</td><td>45</td><td>89</td><td>0.35</td></tr>
+            <tr><td>Carbon Fiber</td><td>1750</td><td>230</td><td>600</td><td>0.10</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- UNIT CONVERTER -->
+  <section id="converter" class="hidden">
+    <h1>Engineering Unit Converter</h1>
+    <div class="calculator-grid">
+      <div class="card"><h2>mm → m</h2><input type="number" id="mmInput" placeholder="Millimeters" inputmode="decimal"><button onclick="convertMMtoM()">Convert</button><p class="result" id="mmResult"></p></div>
+      <div class="card"><h2>N → kN</h2><input type="number" id="nInput" placeholder="Newtons" inputmode="decimal"><button onclick="convertNtoKN()">Convert</button><p class="result" id="nResult"></p></div>
+      <div class="card"><h2>Pa → MPa</h2><input type="number" id="paInput" placeholder="Pascal" inputmode="decimal"><button onclick="convertPaToMPa()">Convert</button><p class="result" id="paResult"></p></div>
+      <div class="card"><h2>RPM → rad/s</h2><input type="number" id="rpmConvInput" placeholder="RPM" inputmode="decimal"><button onclick="convertRPM()">Convert</button><p class="result" id="rpmConvResult"></p></div>
+      <div class="card"><h2>°C → K</h2><input type="number" id="tempInput" placeholder="Celsius" inputmode="decimal"><button onclick="convertTemp()">Convert</button><p class="result" id="tempResult"></p></div>
+      <div class="card">
+        <h2>Universal Converter</h2>
+        <input type="number" id="unitValue" placeholder="Enter Value" inputmode="decimal">
+        <select id="unitType">
+          <option value="mmToM">mm → m</option>
+          <option value="mToMm">m → mm</option>
+          <option value="nToKn">N → kN</option>
+          <option value="knToN">kN → N</option>
+          <option value="paToMpa">Pa → MPa</option>
+          <option value="mpaToPa">MPa → Pa</option>
+          <option value="cToK">°C → K</option>
+          <option value="kToC">K → °C</option>
+        </select>
+        <button onclick="convertUnits()">Convert</button>
+        <p class="result" id="unitResult"></p>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- DOMAINS -->
+  <section id="domains" class="hidden">
+    <h1>Engineering Domains</h1>
+    <div class="calculator-grid">
+      <div class="card feature-card"><i class="fa-solid fa-industry"></i><h3>Manufacturing</h3><p>Production systems, machining and automation.</p></div>
+      <div class="card feature-card"><i class="fa-solid fa-fire"></i><h3>Thermodynamics</h3><p>Heat transfer, engines and energy systems.</p></div>
+      <div class="card feature-card"><i class="fa-solid fa-gears"></i><h3>Machine Design</h3><p>Shafts, gears, springs and mechanisms.</p></div>
+      <div class="card feature-card"><i class="fa-solid fa-water"></i><h3>Fluid Mechanics</h3><p>Hydraulics, pumps and flow systems.</p></div>
+    </div>
+  </section>
+ 
+  <!-- CONTACT -->
+  <section id="contact" class="hidden">
+    <h1>Contact</h1>
+    <div class="card">
+      <p><i class="fa-solid fa-envelope"></i> Email: engineer@gmail.com</p>
+      <p style="margin-top:12px"><i class="fa-solid fa-phone"></i> Phone: +91 9876543210</p>
+    </div>
+  </section>
+ 
+  <footer class="footer">
+    <p>Mechanical Engineering Toolkit © 2026</p>
+    <p>Designed for Engineering Students &amp; Professionals</p>
+  </footer>
+ 
+</div><!-- end main-content -->
+ 
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://manikantapenupothula75887-lang.github.io/mechanical-engineering-toolkit/sitemap.xml
